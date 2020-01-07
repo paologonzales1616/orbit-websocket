@@ -14,6 +14,7 @@ require("./database/index")();
 io.adapter(redis({ host: "localhost", port: 6379 }));
 
 io.on("connect", client => {
+  console.log(`${client.id} is connected!`);
   client.on("auth", userCreds => {
     // check if token is present
     if (!userCreds.token) {
@@ -22,6 +23,7 @@ io.on("connect", client => {
         message: "No token receive!"
       });
       io.sockets.connected[client.id].disconnect();
+      console.log(`${client.id}: No token receive!`);
       return;
     }
     // check if token is valid
@@ -31,6 +33,7 @@ io.on("connect", client => {
         message: "Invalid token!"
       });
       io.sockets.connected[client.id].disconnect();
+      console.log(`${client.id}: Invalid token!`);
       return;
     }
 
