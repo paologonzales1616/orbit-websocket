@@ -37,6 +37,11 @@ io.on("connect", client => {
       return;
     }
 
+    io.to(`${client.id}`).emit("auth", {
+      status: "success",
+      message: "Authentication successful!"
+    });
+
     const payload = decodeToken(userCreds.token);
     payload.session_id = client.id;
     client.credentials = payload;
