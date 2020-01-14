@@ -64,7 +64,7 @@ io.on("connect", client => {
       newNotification.admin_id = admin_id;
       newNotification.status = 1;
       newNotification.save();
-
+      
       if (session_id) {
         io.to(`${session_id}`).emit("user", {
           id: credential.id,
@@ -118,9 +118,13 @@ io.on("connect", client => {
 });
 
 const getAuthenticatedClients = () => {
-  const connectedClients = io.sockets.clients().connected;
-  const sockets = Object.values(connectedClients);
-  return sockets.filter(clients => typeof clients.credentials !== "undefined");
+  const clients = io.sockets.clients().connected;
+  const sockets = Object.values(clients);
+  return sockets.map(s => {
+    if (typeof s.credentials !== "undefined") {
+      return s.credentials;
+    }
+  });
 };
 
 const checkUsersStatus = admin_id => {
