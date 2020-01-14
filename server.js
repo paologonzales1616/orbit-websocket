@@ -56,12 +56,12 @@ io.on("connect", client => {
       });
     } else {
       // client
-      const { admin_id, id } = client.credentials;
-      const session_id = getAdminSessionId(admin_id);
+      const credential = client.credentials;
+      const session_id = getAdminSessionId(credential.admin_id);
       // save new notification
       const newNotification = new Notification();
-      newNotification.user_id = id;
-      newNotification.admin_id = admin_id;
+      newNotification.user_id = credential.id;
+      newNotification.admin_id = credential.admin_id;
       newNotification.status = 1;
       newNotification.save();
       
