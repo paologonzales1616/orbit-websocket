@@ -64,9 +64,10 @@ io.on("connect", client => {
       newNotification.admin_id = credential.admin_id;
       newNotification.status = 1;
       newNotification.save();
-      
+
       if (session_id) {
         io.to(`${session_id}`).emit("user", {
+          ...getUserStatus(credential.id),
           id: credential.id,
           action: "connect"
         });
@@ -126,6 +127,21 @@ const getAuthenticatedClients = () => {
     }
   });
 };
+
+const getUserStatus = id => {
+  let status = {}
+  const clients = getAuthenticatedClients();
+  clients.forEach(element => {
+    if (typeof element !== "undefined") {
+      if (element.admin_id) {
+        if (element.id == id) {
+          status = element
+        }
+      }
+    }
+  });
+  return status
+}
 
 const checkUsersStatus = admin_id => {
   let loggedUsers = [];
